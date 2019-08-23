@@ -15,7 +15,7 @@ import static spark.Spark.post;
 
 public class AccountHandler {
 
-    AccountService accountService;
+    private AccountService accountService;
 
     public AccountHandler(AccountService accountService) {
         this.accountService = accountService;

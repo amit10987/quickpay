@@ -15,8 +15,8 @@ public class MoneyTransactionHandler {
 
     private MoneyTransactionService moneyTransactionService;
 
-    public MoneyTransactionHandler(MoneyTransactionService moneyTransactioService) {
-        this.moneyTransactionService = moneyTransactioService;
+    public MoneyTransactionHandler(MoneyTransactionService moneyTransactionService) {
+        this.moneyTransactionService = moneyTransactionService;
     }
 
     public String transfer(Request req, Response res) {

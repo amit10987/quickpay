@@ -4,12 +4,11 @@ import com.minibank.quickpay.QuickPayDataSource;
 import com.minibank.quickpay.domain.Account;
 import com.minibank.quickpay.exception.AccountNotFoundException;
 import org.sql2o.Connection;
-import org.sql2o.StatementRunnable;
 
 import java.util.List;
 
 
-public class AccountRepositoryImpl implements AccountRepository{
+public class AccountRepositoryImpl implements AccountRepository {
 
     private static final String CREATE_ACCOUNT_SQL = "INSERT INTO ACCOUNT(accountNumber, userName, balance) values (:accountNumber, :userName, :balance)";
     private static final String GET_ALL_ACCOUNTS_SQL = "SELECT * FROM ACCOUNT";
@@ -33,7 +32,7 @@ public class AccountRepositoryImpl implements AccountRepository{
     @Override
     public Account findByAccountNumber(Long accountNumber, Connection connection) {
         Account account = connection.createQuery(GET_ACCOUNT_BY_ACCOUNT_NUMBER_SQL).addParameter("accountNumber", accountNumber).executeAndFetchFirst(Account.class);
-        if(null == account){
+        if (null == account) {
             throw new AccountNotFoundException();
         }
         return account;

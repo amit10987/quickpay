@@ -3,7 +3,6 @@ package com.minibank.quickpay.domain;
 import com.minibank.quickpay.exception.InsufficientFund;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Account {
 
@@ -16,7 +15,7 @@ public class Account {
             throw new IllegalArgumentException("Opening balance must not be negative.");
         }
 
-        if(null == userName || userName.isEmpty()){
+        if (null == userName || userName.isEmpty()) {
             throw new IllegalArgumentException("Please enter user name.");
         }
 

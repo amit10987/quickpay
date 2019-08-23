@@ -3,17 +3,17 @@ package com.minibank.quickpay.domain.service;
 import com.minibank.quickpay.domain.Account;
 import com.minibank.quickpay.dto.CreateAccountRequest;
 import com.minibank.quickpay.infrastructure.AccountRepository;
-import com.minibank.quickpay.infrastructure.AccountRepositoryImpl;
 
 import java.util.List;
 
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
 
     private AccountRepository accountRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository){
+    public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
+
     @Override
     public Long createAccount(CreateAccountRequest req) {
         Long accountNumber = generateAccountNumber();

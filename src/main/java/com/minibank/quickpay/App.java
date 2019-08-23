@@ -1,6 +1,5 @@
 package com.minibank.quickpay;
 
-
 import com.minibank.quickpay.domain.service.AccountService;
 import com.minibank.quickpay.domain.service.AccountServiceImpl;
 import com.minibank.quickpay.domain.service.MoneyTransactionService;
