@@ -11,6 +11,13 @@ public class Account {
     private Long accountNumber;
 
     public Account(BigDecimal balance, String userName, Long accountNumber) {
+        validateMandatoryFields(balance, userName, accountNumber);
+        this.balance = balance;
+        this.userName = userName;
+        this.accountNumber = accountNumber;
+    }
+
+    private void validateMandatoryFields(BigDecimal balance, String userName, Long accountNumber) {
         if (null == balance || balance.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Opening balance must not be negative.");
         }
@@ -19,17 +26,13 @@ public class Account {
             throw new IllegalArgumentException("User Name must not be empty.");
         }
 
-        if(null == accountNumber){
-            throw new IllegalArgumentException("Account number must not be empty.");
+        if (null == accountNumber || accountNumber.toString().length() < 10) {
+            throw new IllegalArgumentException("Account number must not be empty or less than 10 digit.");
         }
-
-        this.balance = balance;
-        this.userName = userName;
-        this.accountNumber = accountNumber;
     }
 
     public BigDecimal getBalance() {
-        return balance;
+        return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public String getUserName() {
