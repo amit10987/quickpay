@@ -5,7 +5,7 @@ import minibank.quickpay.util.ErrorMessages;
 
 import java.math.BigDecimal;
 
-public class Account {
+public final class Account {
 
     private BigDecimal balance;
     private String userName;
