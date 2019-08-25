@@ -41,7 +41,7 @@ public class MoneyTransactionServiceFunctionalTest {
     public ExpectedException expectedRule = ExpectedException.none();
 
     @Test
-    public void should_throwInsufficientFundException_when_transferAmountIsGreaterThanAccountBalance() {
+    public void should_throwInsufficientFundException_when_transferAmountIsGreaterThanAccountBalanceTest() {
         MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
         moneyTransferRequest.setFromAccountNumber(6642159765L);
         moneyTransferRequest.setToAccountNumber(6642159766L);
@@ -60,7 +60,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_success_when_transferAmountIsLessThanAccountBalance() {
+    public void should_success_when_transferAmountIsLessThanAccountBalanceTest() {
         MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
         moneyTransferRequest.setFromAccountNumber(6642159765L);
         moneyTransferRequest.setToAccountNumber(6642159766L);
@@ -78,7 +78,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_depositAmountIsNegativeValue() {
+    public void should_throwIllegalArgumentException_when_depositAmountIsNegativeValueTest() {
         MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
         moneyDepositRequest.setAccountNumber(6642159765L);
         moneyDepositRequest.setAmount(new BigDecimal(-200));
@@ -93,7 +93,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_depositAmountIsZero() {
+    public void should_throwIllegalArgumentException_when_depositAmountIsZeroTest() {
         MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
         moneyDepositRequest.setAccountNumber(6642159765L);
         moneyDepositRequest.setAmount(new BigDecimal(0));
@@ -108,7 +108,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_depositAmountIsNull() {
+    public void should_throwIllegalArgumentException_when_depositAmountIsNullTest() {
         MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
         moneyDepositRequest.setAccountNumber(6642159765L);
 
@@ -122,7 +122,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_success_when_depositAmountIsPositiveDecimalValue() {
+    public void should_success_when_depositAmountIsPositiveDecimalValueTest() {
         MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
         moneyDepositRequest.setAccountNumber(6642159765L);
         moneyDepositRequest.setAmount(new BigDecimal(100));
@@ -136,7 +136,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_creditAmountIsZero() {
+    public void should_throwIllegalArgumentException_when_creditAmountIsZeroTest() {
         MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
         moneyWithdrawRequest.setAccountNumber(6642159765L);
         moneyWithdrawRequest.setAmount(new BigDecimal(0));
@@ -151,7 +151,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_creditAmountIsNull() {
+    public void should_throwIllegalArgumentException_when_creditAmountIsNullTest() {
         MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
         moneyWithdrawRequest.setAccountNumber(6642159765L);
 
@@ -165,7 +165,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_when_creditAmountIsNegativeValue() {
+    public void should_throwIllegalArgumentException_when_creditAmountIsNegativeValueTest() {
         MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
         moneyWithdrawRequest.setAccountNumber(6642159765L);
         moneyWithdrawRequest.setAmount(new BigDecimal(-200));
@@ -180,7 +180,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_success_when_withdrawAmountIsPositiveDecimalValue_And_LessThanAvailableBalance() {
+    public void should_success_when_withdrawAmountIsPositiveDecimalValue_And_LessThanAvailableBalanceTest() {
         MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
         moneyWithdrawRequest.setAccountNumber(6642159765L);
         moneyWithdrawRequest.setAmount(new BigDecimal(200));
@@ -194,7 +194,7 @@ public class MoneyTransactionServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwInsufficientFund_when_withdrawAmountIsPositiveDecimalValue_And_GreaterThanAvailableBalance() {
+    public void should_throwInsufficientFund_when_withdrawAmountIsPositiveDecimalValue_And_GreaterThanAvailableBalanceTest() {
         MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
         moneyWithdrawRequest.setAccountNumber(6642159765L);
         moneyWithdrawRequest.setAmount(new BigDecimal(600));

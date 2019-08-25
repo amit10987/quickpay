@@ -32,7 +32,7 @@ public final class Account {
         }
     }
 
-    public BigDecimal getBalance() {
+    public synchronized BigDecimal getBalance() {
         return balance.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 

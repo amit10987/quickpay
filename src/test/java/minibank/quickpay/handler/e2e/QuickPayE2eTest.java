@@ -7,10 +7,7 @@ import com.despegar.http.client.PostMethod;
 import com.despegar.sparkjava.test.SparkServer;
 import minibank.quickpay.App;
 import minibank.quickpay.domain.Account;
-import minibank.quickpay.dto.CreateAccountRequest;
-import minibank.quickpay.dto.CreateAccountResponse;
-import minibank.quickpay.dto.ErrorResponse;
-import minibank.quickpay.dto.MoneyTransferRequest;
+import minibank.quickpay.dto.*;
 import minibank.quickpay.util.JsonUtil;
 import minibank.quickpay.util.QuickPayEndPoint;
 import minibank.quickpay.util.QuickPayMessages;
@@ -36,7 +33,7 @@ public class QuickPayE2eTest {
     public static final SparkServer<QuickPayApp> testServer = new SparkServer<>(QuickPayApp.class, 4568);
 
     @Test
-    public void should_getAllAccount_when_getAllAccountEndPointCalled() throws HttpClientException {
+    public void should_getAllAccount_when_getAllAccountEndPointCalledTest() throws HttpClientException {
 
         GetMethod getAllAccounts = testServer.get(QuickPayEndPoint.Account.GET_ALL_ACCOUNTS, false);
         getAllAccounts.addHeader("content-type", "application/json");
@@ -47,7 +44,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorResponse_whenOpeningBalanceIsNull() throws HttpClientException {
+    public void should_getErrorResponse_whenOpeningBalanceIsNullTest() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setUserName("John");
         PostMethod createAccount = testServer.post(QuickPayEndPoint.Account.CREATE_ACCOUNT, JsonUtil.serialize(createAccountRequest), false);
@@ -58,7 +55,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorResponse_whenOpeningBalanceIsNegative() throws HttpClientException {
+    public void should_getErrorResponse_whenOpeningBalanceIsNegativeTest() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setUserName("John");
         createAccountRequest.setOpeningBalance(new BigDecimal(-200));
@@ -70,7 +67,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorResponse_whenUserNameIsNull() throws HttpClientException {
+    public void should_getErrorResponse_whenUserNameIsNullTest() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(200));
         PostMethod createAccount = testServer.post(QuickPayEndPoint.Account.CREATE_ACCOUNT, JsonUtil.serialize(createAccountRequest), false);
@@ -81,7 +78,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorResponse_whenUserNameIsEmpty() throws HttpClientException {
+    public void should_getErrorResponse_whenUserNameIsEmptyTest() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(200));
         createAccountRequest.setUserName("");
@@ -93,7 +90,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_createNewAccount_validate_openingBalance_and_username_whenValidRequestProvided() throws HttpClientException {
+    public void should_createNewAccount_validate_openingBalance_and_username_whenValidRequestProvidedTest() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal("200.00"));
         createAccountRequest.setUserName("John");
@@ -109,7 +106,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorMessageAccountNumberNotFound_whenWrongAccountNumberProvidedInTransfer() throws HttpClientException {
+    public void should_getErrorMessageAccountNumberNotFound_whenWrongAccountNumberProvidedInTransferTest() throws HttpClientException {
         MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
         moneyTransferRequest.setTransferAmount(new BigDecimal(200));
         moneyTransferRequest.setFromAccountNumber(12345L);
@@ -122,7 +119,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNullInTransfer() throws HttpClientException {
+    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNullInTransferTest() throws HttpClientException {
         MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
         moneyTransferRequest.setFromAccountNumber(6642159765L);
         moneyTransferRequest.setToAccountNumber(6642159766L);
@@ -134,7 +131,7 @@ public class QuickPayE2eTest {
     }
 
     @Test
-    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNegativeInTransfer() throws HttpClientException {
+    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNegativeInTransferTest() throws HttpClientException {
         MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
         moneyTransferRequest.setTransferAmount(new BigDecimal(-200));
         moneyTransferRequest.setFromAccountNumber(6642159765L);
@@ -146,9 +143,158 @@ public class QuickPayE2eTest {
         Assert.assertEquals(QuickPayMessages.INVALID_DEBIT_AMOUNT, errorResponse.getMessage());
     }
 
+    @Test
+    public void should_getErrorMessageInsufficientFund_whenTransferAmountIsGreaterThanAccountBalanceTest() throws HttpClientException {
+        CreateAccountResponse fromAccount = createAccount("user1", new BigDecimal(200));
+        CreateAccountResponse toAccount = createAccount("user2", new BigDecimal(200));
+
+        MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
+        moneyTransferRequest.setTransferAmount(new BigDecimal(300));
+        moneyTransferRequest.setFromAccountNumber(fromAccount.getAccountNumber());
+        moneyTransferRequest.setToAccountNumber(toAccount.getAccountNumber());
+
+        PostMethod transfer = testServer.post(QuickPayEndPoint.MoneyTransaction.TRANSFER, JsonUtil.serialize(moneyTransferRequest), false);
+        HttpResponse httpResponse = testServer.execute(transfer);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INSUFFICIENT_FUND, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_transferSuccess_whenTransferAmountIsValidAndLessThanAccountBalanceTest() throws HttpClientException {
+        CreateAccountResponse fromAccount = createAccount("user3", new BigDecimal(200));
+        CreateAccountResponse toAccount = createAccount("user4", new BigDecimal(200));
+
+        MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
+        moneyTransferRequest.setTransferAmount(new BigDecimal(100));
+        moneyTransferRequest.setFromAccountNumber(fromAccount.getAccountNumber());
+        moneyTransferRequest.setToAccountNumber(toAccount.getAccountNumber());
+
+        PostMethod transfer = testServer.post(QuickPayEndPoint.MoneyTransaction.TRANSFER, JsonUtil.serialize(moneyTransferRequest), false);
+        HttpResponse httpResponse = testServer.execute(transfer);
+        Assert.assertEquals(200, httpResponse.code());
+        MoneyTransferResponse moneyTransferResponse = JsonUtil.deserialize(new String(httpResponse.body()), MoneyTransferResponse.class);
+        Assert.assertEquals(QuickPayMessages.SUCCESSFUL_TRANSFER, moneyTransferResponse.getMessage());
+
+        Account fromAccountAfterTransfer = getAccount(fromAccount.getAccountNumber());
+        Account toAccountAfterTransfer = getAccount(toAccount.getAccountNumber());
+
+        Assert.assertEquals(new BigDecimal("100.00"), fromAccountAfterTransfer.getBalance());
+        Assert.assertEquals(new BigDecimal("300.00"), toAccountAfterTransfer.getBalance());
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidAmount_whenDepositAmountIsNullTest() throws HttpClientException {
+        MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
+        moneyDepositRequest.setAccountNumber(6642159765L);
+        PostMethod deposit = testServer.post(QuickPayEndPoint.MoneyTransaction.DEPOSIT, JsonUtil.serialize(moneyDepositRequest), false);
+        HttpResponse httpResponse = testServer.execute(deposit);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_CREDIT_AMOUNT, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidAmount_whenDepositAmountIsNegativeTest() throws HttpClientException {
+        MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
+        moneyDepositRequest.setAccountNumber(6642159765L);
+        moneyDepositRequest.setAmount(new BigDecimal(-200));
+        PostMethod deposit = testServer.post(QuickPayEndPoint.MoneyTransaction.DEPOSIT, JsonUtil.serialize(moneyDepositRequest), false);
+        HttpResponse httpResponse = testServer.execute(deposit);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_CREDIT_AMOUNT, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_depositSuccess_whenDepositAmountIsValidTest() throws HttpClientException {
+        CreateAccountResponse depositAccount = createAccount("deposit user", new BigDecimal(200));
+
+        MoneyDepositRequest moneyDepositRequest = new MoneyDepositRequest();
+        moneyDepositRequest.setAccountNumber(depositAccount.getAccountNumber());
+        moneyDepositRequest.setAmount(new BigDecimal(200));
+
+        PostMethod deposit = testServer.post(QuickPayEndPoint.MoneyTransaction.DEPOSIT, JsonUtil.serialize(moneyDepositRequest), false);
+        HttpResponse httpResponse = testServer.execute(deposit);
+
+        Assert.assertEquals(200, httpResponse.code());
+        MoneyDepositResponse moneyDepositResponse = JsonUtil.deserialize(new String(httpResponse.body()), MoneyDepositResponse.class);
+        Assert.assertEquals(QuickPayMessages.SUCCESSFUL_DEPOSIT, moneyDepositResponse.getMessage());
+
+        Account depositAmountAfterTransaction = getAccount(depositAccount.getAccountNumber());
+
+        Assert.assertEquals(new BigDecimal("400.00"), depositAmountAfterTransaction.getBalance());
+
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidAmount_when_withdrawAmountIsNullTest() throws HttpClientException {
+        MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
+        moneyWithdrawRequest.setAccountNumber(6642159765L);
+        PostMethod withdraw = testServer.post(QuickPayEndPoint.MoneyTransaction.WITHDRAW, JsonUtil.serialize(moneyWithdrawRequest), false);
+        HttpResponse httpResponse = testServer.execute(withdraw);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_DEBIT_AMOUNT, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidAmount_when_withdrawAmountIsNegativeValueTest() throws HttpClientException {
+        MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
+        moneyWithdrawRequest.setAccountNumber(6642159765L);
+        moneyWithdrawRequest.setAmount(new BigDecimal(-200));
+        PostMethod withdraw = testServer.post(QuickPayEndPoint.MoneyTransaction.WITHDRAW, JsonUtil.serialize(moneyWithdrawRequest), false);
+        HttpResponse httpResponse = testServer.execute(withdraw);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_DEBIT_AMOUNT, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_getErrorMessageInsufficientFund_when_withdrawAmountIsGreaterThanAccountBalanceTest() throws HttpClientException {
+        CreateAccountResponse withdrawAccount = createAccount("deposit user", new BigDecimal(200));
+
+        MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
+        moneyWithdrawRequest.setAccountNumber(withdrawAccount.getAccountNumber());
+        moneyWithdrawRequest.setAmount(new BigDecimal(300));
+
+        PostMethod withdraw = testServer.post(QuickPayEndPoint.MoneyTransaction.WITHDRAW, JsonUtil.serialize(moneyWithdrawRequest), false);
+        HttpResponse httpResponse = testServer.execute(withdraw);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INSUFFICIENT_FUND, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_successWithdraw_when_withdrawAmountIsGreaterThanAccountBalanceTest() throws HttpClientException {
+        CreateAccountResponse withdrawAccount = createAccount("deposit user", new BigDecimal(200));
+
+        MoneyWithdrawRequest moneyWithdrawRequest = new MoneyWithdrawRequest();
+        moneyWithdrawRequest.setAccountNumber(withdrawAccount.getAccountNumber());
+        moneyWithdrawRequest.setAmount(new BigDecimal(100));
+
+        PostMethod withdraw = testServer.post(QuickPayEndPoint.MoneyTransaction.WITHDRAW, JsonUtil.serialize(moneyWithdrawRequest), false);
+        HttpResponse httpResponse = testServer.execute(withdraw);
+        Assert.assertEquals(200, httpResponse.code());
+        MoneyWithdrawResponse moneyWithdrawResponse = JsonUtil.deserialize(new String(httpResponse.body()), MoneyWithdrawResponse.class);
+        Assert.assertEquals(QuickPayMessages.SUCCESSFUL_WITHDRAW, moneyWithdrawResponse.getMessage());
+
+        Account withdrawAccountAfterTransaction = getAccount(withdrawAccount.getAccountNumber());
+        Assert.assertEquals(new BigDecimal("100.00"), withdrawAccountAfterTransaction.getBalance());
+    }
+
     private Account getAccount(Long accountNumber) throws HttpClientException {
         GetMethod getAccount = testServer.get("/accounts/" + accountNumber, false);
         HttpResponse httpResponse = testServer.execute(getAccount);
         return JsonUtil.deserialize(new String(httpResponse.body()), Account.class);
+    }
+
+    private CreateAccountResponse createAccount(String userName, BigDecimal openingBalance) throws HttpClientException {
+        CreateAccountRequest createAccountRequest = new CreateAccountRequest();
+        createAccountRequest.setOpeningBalance(openingBalance);
+        createAccountRequest.setUserName(userName);
+        PostMethod createAccount = testServer.post(QuickPayEndPoint.Account.CREATE_ACCOUNT, JsonUtil.serialize(createAccountRequest), false);
+        HttpResponse httpResponse = testServer.execute(createAccount);
+        return JsonUtil.deserialize(new String(httpResponse.body()), CreateAccountResponse.class);
     }
 }

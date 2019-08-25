@@ -35,7 +35,7 @@ public class AccountServiceFunctionalTest {
     public ExpectedException expectedRule = ExpectedException.none();
 
     @Test
-    public void should_createAccountWithValidAccountNumber_when_correctValueProvided() {
+    public void should_createAccountWithValidAccountNumber_when_correctValueProvidedTest() {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(5));
         createAccountRequest.setUserName("John");
@@ -44,7 +44,7 @@ public class AccountServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_whenUserNameIsNotSetInRequest() {
+    public void should_throwIllegalArgumentException_whenUserNameIsNotSetInRequestTest() {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(5));
         expectedRule.expect(IllegalArgumentException.class);
@@ -53,7 +53,7 @@ public class AccountServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_whenUserNameIsEmptyString() {
+    public void should_throwIllegalArgumentException_whenUserNameIsEmptyStringTest() {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(5));
         createAccountRequest.setUserName("");
@@ -63,7 +63,7 @@ public class AccountServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_whenOpeningBalanceIsNotSetInRequest() {
+    public void should_throwIllegalArgumentException_whenOpeningBalanceIsNotSetInRequestTest() {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setUserName("John");
         expectedRule.expect(IllegalArgumentException.class);
@@ -72,7 +72,7 @@ public class AccountServiceFunctionalTest {
     }
 
     @Test
-    public void should_throwIllegalArgumentException_whenOpeningBalanceIsNegative() {
+    public void should_throwIllegalArgumentException_whenOpeningBalanceIsNegativeTest() {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(-1));
         createAccountRequest.setUserName("John");
