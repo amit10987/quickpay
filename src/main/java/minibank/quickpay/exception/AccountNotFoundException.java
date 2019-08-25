@@ -1,8 +1,10 @@
 package minibank.quickpay.exception;
 
-public class AccountNotFoundException extends RuntimeException{
+import minibank.quickpay.util.QuickPayMessages;
 
-    public  AccountNotFoundException(){
-        super("Account number does not exist.");
+public class AccountNotFoundException extends RuntimeException {
+
+    public AccountNotFoundException() {
+        super(QuickPayMessages.ACCOUNT_NUMBER_NOT_FOUND);
     }
 }

@@ -6,6 +6,7 @@ import minibank.quickpay.exception.AccountNotFoundException;
 import minibank.quickpay.exception.InsufficientFund;
 import minibank.quickpay.util.JsonUtil;
 import minibank.quickpay.util.QuickPayEndPoint;
+import minibank.quickpay.util.QuickPayMessages;
 import spark.Request;
 import spark.Response;
 
@@ -27,7 +28,7 @@ public class MoneyTransactionHandler {
         MoneyTransferRequest moneyTransferRequest = JsonUtil.deserialize(req.body(), MoneyTransferRequest.class);
         moneyTransactionService.transfer(moneyTransferRequest);
         res.status(200);
-        return JsonUtil.serialize(new MoneyTransferResponse("Money successfully transferred."));
+        return JsonUtil.serialize(new MoneyTransferResponse(QuickPayMessages.SUCCESSFUL_TRANSFER));
     }
 
     public String deposit(Request req, Response res) {
@@ -35,7 +36,7 @@ public class MoneyTransactionHandler {
         MoneyDepositRequest moneyDepositRequest = JsonUtil.deserialize(req.body(), MoneyDepositRequest.class);
         moneyTransactionService.deposit(moneyDepositRequest);
         res.status(200);
-        return JsonUtil.serialize(new MoneyDepositResponse("Money successfully deposited."));
+        return JsonUtil.serialize(new MoneyDepositResponse(QuickPayMessages.SUCCESSFUL_DEPOSIT));
     }
 
     public String withdraw(Request req, Response res) {
@@ -43,7 +44,7 @@ public class MoneyTransactionHandler {
         MoneyWithdrawRequest moneyWithdrawRequest = JsonUtil.deserialize(req.body(), MoneyWithdrawRequest.class);
         moneyTransactionService.withdraw(moneyWithdrawRequest);
         res.status(200);
-        return JsonUtil.serialize(new MoneyWithdrawResponse("Money successfully withdraw."));
+        return JsonUtil.serialize(new MoneyWithdrawResponse(QuickPayMessages.SUCCESSFUL_WITHDRAW));
     }
 
     public void setupEndpoints() {

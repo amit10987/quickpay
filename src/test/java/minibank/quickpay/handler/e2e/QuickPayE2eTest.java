@@ -10,9 +10,10 @@ import minibank.quickpay.domain.Account;
 import minibank.quickpay.dto.CreateAccountRequest;
 import minibank.quickpay.dto.CreateAccountResponse;
 import minibank.quickpay.dto.ErrorResponse;
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.dto.MoneyTransferRequest;
 import minibank.quickpay.util.JsonUtil;
 import minibank.quickpay.util.QuickPayEndPoint;
+import minibank.quickpay.util.QuickPayMessages;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -22,17 +23,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountHandlerE2e {
+public class QuickPayE2eTest {
 
+    public static class QuickPayApp implements SparkApplication {
 
-    public static class AccountHandlerE2eSparkApp implements SparkApplication {
         public void init() {
             App.init();
         }
     }
 
     @ClassRule
-    public static final SparkServer<AccountHandlerE2eSparkApp> testServer = new SparkServer<>(AccountHandlerE2e.AccountHandlerE2eSparkApp.class, 4568);
+    public static final SparkServer<QuickPayApp> testServer = new SparkServer<>(QuickPayApp.class, 4568);
 
     @Test
     public void should_getAllAccount_when_getAllAccountEndPointCalled() throws HttpClientException {
@@ -53,7 +54,7 @@ public class AccountHandlerE2e {
         HttpResponse httpResponse = testServer.execute(createAccount);
         Assert.assertEquals(200, httpResponse.code());
         ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
-        Assert.assertEquals(ErrorMessages.INVALID_OPENING_BALANCE, errorResponse.getMessage());
+        Assert.assertEquals(QuickPayMessages.INVALID_OPENING_BALANCE, errorResponse.getMessage());
     }
 
     @Test
@@ -65,7 +66,7 @@ public class AccountHandlerE2e {
         HttpResponse httpResponse = testServer.execute(createAccount);
         Assert.assertEquals(200, httpResponse.code());
         ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
-        Assert.assertEquals(ErrorMessages.INVALID_OPENING_BALANCE, errorResponse.getMessage());
+        Assert.assertEquals(QuickPayMessages.INVALID_OPENING_BALANCE, errorResponse.getMessage());
     }
 
     @Test
@@ -76,7 +77,7 @@ public class AccountHandlerE2e {
         HttpResponse httpResponse = testServer.execute(createAccount);
         Assert.assertEquals(200, httpResponse.code());
         ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
-        Assert.assertEquals(ErrorMessages.INVALID_USER_NAME, errorResponse.getMessage());
+        Assert.assertEquals(QuickPayMessages.INVALID_USER_NAME, errorResponse.getMessage());
     }
 
     @Test
@@ -88,11 +89,11 @@ public class AccountHandlerE2e {
         HttpResponse httpResponse = testServer.execute(createAccount);
         Assert.assertEquals(200, httpResponse.code());
         ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
-        Assert.assertEquals(ErrorMessages.INVALID_USER_NAME, errorResponse.getMessage());
+        Assert.assertEquals(QuickPayMessages.INVALID_USER_NAME, errorResponse.getMessage());
     }
 
     @Test
-    public void should_createNewAccount_whenValidRequestProvided() throws HttpClientException {
+    public void should_createNewAccount_validate_openingBalance_and_username_whenValidRequestProvided() throws HttpClientException {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal("200.00"));
         createAccountRequest.setUserName("John");
@@ -105,6 +106,44 @@ public class AccountHandlerE2e {
         Account account = getAccount(createAccountResponse.getAccountNumber());
         Assert.assertEquals(createAccountRequest.getOpeningBalance(), account.getBalance());
         Assert.assertEquals(createAccountRequest.getUserName(), account.getUserName());
+    }
+
+    @Test
+    public void should_getErrorMessageAccountNumberNotFound_whenWrongAccountNumberProvidedInTransfer() throws HttpClientException {
+        MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
+        moneyTransferRequest.setTransferAmount(new BigDecimal(200));
+        moneyTransferRequest.setFromAccountNumber(12345L);
+        moneyTransferRequest.setToAccountNumber(12346L);
+        PostMethod transfer = testServer.post(QuickPayEndPoint.MoneyTransaction.TRANSFER, JsonUtil.serialize(moneyTransferRequest), false);
+        HttpResponse httpResponse = testServer.execute(transfer);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.ACCOUNT_NUMBER_NOT_FOUND, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNullInTransfer() throws HttpClientException {
+        MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
+        moneyTransferRequest.setFromAccountNumber(6642159765L);
+        moneyTransferRequest.setToAccountNumber(6642159766L);
+        PostMethod transfer = testServer.post(QuickPayEndPoint.MoneyTransaction.TRANSFER, JsonUtil.serialize(moneyTransferRequest), false);
+        HttpResponse httpResponse = testServer.execute(transfer);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_DEBIT_AMOUNT, errorResponse.getMessage());
+    }
+
+    @Test
+    public void should_getErrorMessageInvalidDebitAmount_whenTransferAmountIsNegativeInTransfer() throws HttpClientException {
+        MoneyTransferRequest moneyTransferRequest = new MoneyTransferRequest();
+        moneyTransferRequest.setTransferAmount(new BigDecimal(-200));
+        moneyTransferRequest.setFromAccountNumber(6642159765L);
+        moneyTransferRequest.setToAccountNumber(6642159766L);
+        PostMethod transfer = testServer.post(QuickPayEndPoint.MoneyTransaction.TRANSFER, JsonUtil.serialize(moneyTransferRequest), false);
+        HttpResponse httpResponse = testServer.execute(transfer);
+        Assert.assertEquals(200, httpResponse.code());
+        ErrorResponse errorResponse = JsonUtil.deserialize(new String(httpResponse.body()), ErrorResponse.class);
+        Assert.assertEquals(QuickPayMessages.INVALID_DEBIT_AMOUNT, errorResponse.getMessage());
     }
 
     private Account getAccount(Long accountNumber) throws HttpClientException {

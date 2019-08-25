@@ -1,9 +1,9 @@
 package minibank.quickpay.exception;
 
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.util.QuickPayMessages;
 
 public class InsufficientFund extends RuntimeException{
     public InsufficientFund(){
-        super(ErrorMessages.INSUFFICIENT_FUND);
+        super(QuickPayMessages.INSUFFICIENT_FUND);
     }
 }

@@ -3,7 +3,7 @@ package minibank.quickpay.domain.service.functionaltest;
 import minibank.quickpay.domain.service.AccountServiceImpl;
 import minibank.quickpay.dto.CreateAccountRequest;
 import minibank.quickpay.infrastructure.AccountRepositoryImpl;
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.util.QuickPayMessages;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,7 +48,7 @@ public class AccountServiceFunctionalTest {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setOpeningBalance(new BigDecimal(5));
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_USER_NAME);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_USER_NAME);
         accountService.createAccount(createAccountRequest);
     }
 
@@ -58,7 +58,7 @@ public class AccountServiceFunctionalTest {
         createAccountRequest.setOpeningBalance(new BigDecimal(5));
         createAccountRequest.setUserName("");
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_USER_NAME);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_USER_NAME);
         accountService.createAccount(createAccountRequest);
     }
 
@@ -67,7 +67,7 @@ public class AccountServiceFunctionalTest {
         CreateAccountRequest createAccountRequest = new CreateAccountRequest();
         createAccountRequest.setUserName("John");
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_OPENING_BALANCE);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_OPENING_BALANCE);
         accountService.createAccount(createAccountRequest);
     }
 
@@ -77,7 +77,7 @@ public class AccountServiceFunctionalTest {
         createAccountRequest.setOpeningBalance(new BigDecimal(-1));
         createAccountRequest.setUserName("John");
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_OPENING_BALANCE);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_OPENING_BALANCE);
         accountService.createAccount(createAccountRequest);
     }
 }

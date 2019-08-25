@@ -2,7 +2,7 @@ package minibank.quickpay.domain.unittest;
 
 import minibank.quickpay.domain.Account;
 import minibank.quickpay.exception.InsufficientFund;
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.util.QuickPayMessages;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,28 +18,28 @@ public class AccountUnitTest {
     @Test
     public void should_throwIllegalArgumentException_when_OpeningBalanceIsNegative() {
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_OPENING_BALANCE);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_OPENING_BALANCE);
         new Account(new BigDecimal(-1), "John", 6578676756L);
     }
 
     @Test
     public void should_throwIllegalArgumentException_when_userNameIsNull() {
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_USER_NAME);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_USER_NAME);
         new Account(new BigDecimal(500), null, 6578676756L);
     }
 
     @Test
     public void should_throwIllegalArgumentException_when_accountNumberIsNull() {
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_ACCOUNT_NUMBER);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_ACCOUNT_NUMBER);
         new Account(new BigDecimal(500), "John", null);
     }
 
     @Test
     public void should_throwIllegalArgumentException_when_accountNumberIsLessThan10digit() {
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_ACCOUNT_NUMBER);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_ACCOUNT_NUMBER);
         new Account(new BigDecimal(500), "John", 657867644L);
     }
 
@@ -56,7 +56,7 @@ public class AccountUnitTest {
     public void should_throwIllegalArgumentException_when_amountToBeCreditIsNull() {
         Account account = new Account(new BigDecimal(500), "John", 6642159765L);
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_CREDIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_CREDIT_AMOUNT);
         account.credit(null);
     }
 
@@ -64,7 +64,7 @@ public class AccountUnitTest {
     public void should_throwIllegalArgumentException_when_amountToBeCreditIsNegativeValue() {
         Account account = new Account(new BigDecimal(500), "John", 6642159765L);
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_CREDIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_CREDIT_AMOUNT);
         account.credit(new BigDecimal(-1));
     }
 
@@ -79,7 +79,7 @@ public class AccountUnitTest {
     public void should_throwIllegalArgumentException_when_amountToBeDebitIsNull() {
         Account account = new Account(new BigDecimal(500), "John", 6642159765L);
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_DEBIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_DEBIT_AMOUNT);
         account.debit(null);
     }
 
@@ -87,7 +87,7 @@ public class AccountUnitTest {
     public void should_throwIllegalArgumentException_when_amountToBeDebitIsNegativeValue() {
         Account account = new Account(new BigDecimal(500), "John", 6642159765L);
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_DEBIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_DEBIT_AMOUNT);
         account.debit(new BigDecimal(-1));
     }
 
@@ -102,7 +102,7 @@ public class AccountUnitTest {
     public void should_throwInsufficientFundException_when_amountToBeDebitIsGreaterThanAccountBalance() {
         Account account = new Account(new BigDecimal(500), "John", 6642159765L);
         expectedRule.expect(InsufficientFund.class);
-        expectedRule.expectMessage(ErrorMessages.INSUFFICIENT_FUND);
+        expectedRule.expectMessage(QuickPayMessages.INSUFFICIENT_FUND);
         account.debit(new BigDecimal(501));
     }
 }

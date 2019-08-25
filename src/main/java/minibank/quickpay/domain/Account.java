@@ -1,7 +1,7 @@
 package minibank.quickpay.domain;
 
 import minibank.quickpay.exception.InsufficientFund;
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.util.QuickPayMessages;
 
 import java.math.BigDecimal;
 
@@ -20,15 +20,15 @@ public final class Account {
 
     private void validateMandatoryFields(BigDecimal balance, String userName, Long accountNumber) {
         if (null == balance || balance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException(ErrorMessages.INVALID_OPENING_BALANCE);
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_OPENING_BALANCE);
         }
 
         if (null == userName || userName.isEmpty()) {
-            throw new IllegalArgumentException(ErrorMessages.INVALID_USER_NAME);
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_USER_NAME);
         }
 
         if (null == accountNumber || accountNumber.toString().length() < 10) {
-            throw new IllegalArgumentException(ErrorMessages.INVALID_ACCOUNT_NUMBER);
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_ACCOUNT_NUMBER);
         }
     }
 
@@ -46,7 +46,7 @@ public final class Account {
 
     public void credit(BigDecimal amount) {
         if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(ErrorMessages.INVALID_CREDIT_AMOUNT);
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_CREDIT_AMOUNT);
         }
         synchronized (this) {
             this.balance = this.balance.add(amount);
@@ -55,7 +55,7 @@ public final class Account {
 
     public void debit(BigDecimal amount) {
         if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(ErrorMessages.INVALID_DEBIT_AMOUNT);
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_DEBIT_AMOUNT);
         }
         synchronized (this) {
             BigDecimal newBalance = this.balance.subtract(amount);

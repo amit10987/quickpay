@@ -7,7 +7,7 @@ import minibank.quickpay.dto.MoneyTransferRequest;
 import minibank.quickpay.dto.MoneyWithdrawRequest;
 import minibank.quickpay.exception.InsufficientFund;
 import minibank.quickpay.infrastructure.AccountRepositoryImpl;
-import minibank.quickpay.util.ErrorMessages;
+import minibank.quickpay.util.QuickPayMessages;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -54,7 +54,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyTransferRequest.getToAccountNumber()), any())).thenReturn(toAccount);
 
         expectedRule.expect(InsufficientFund.class);
-        expectedRule.expectMessage(ErrorMessages.INSUFFICIENT_FUND);
+        expectedRule.expectMessage(QuickPayMessages.INSUFFICIENT_FUND);
 
         moneyTransactionService.transfer(moneyTransferRequest);
     }
@@ -87,7 +87,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyDepositRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_CREDIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_CREDIT_AMOUNT);
 
         moneyTransactionService.deposit(moneyDepositRequest);
     }
@@ -102,7 +102,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyDepositRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_CREDIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_CREDIT_AMOUNT);
 
         moneyTransactionService.deposit(moneyDepositRequest);
     }
@@ -116,7 +116,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyDepositRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_CREDIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_CREDIT_AMOUNT);
 
         moneyTransactionService.deposit(moneyDepositRequest);
     }
@@ -145,7 +145,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyWithdrawRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_DEBIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_DEBIT_AMOUNT);
 
         moneyTransactionService.withdraw(moneyWithdrawRequest);
     }
@@ -159,7 +159,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyWithdrawRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_DEBIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_DEBIT_AMOUNT);
 
         moneyTransactionService.withdraw(moneyWithdrawRequest);
     }
@@ -174,7 +174,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyWithdrawRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(IllegalArgumentException.class);
-        expectedRule.expectMessage(ErrorMessages.INVALID_DEBIT_AMOUNT);
+        expectedRule.expectMessage(QuickPayMessages.INVALID_DEBIT_AMOUNT);
 
         moneyTransactionService.withdraw(moneyWithdrawRequest);
     }
@@ -203,7 +203,7 @@ public class MoneyTransactionServiceFunctionalTest {
         when(accountRepository.findByAccountNumber(eq(moneyWithdrawRequest.getAccountNumber()), any())).thenReturn(account);
 
         expectedRule.expect(InsufficientFund.class);
-        expectedRule.expectMessage(ErrorMessages.INSUFFICIENT_FUND);
+        expectedRule.expectMessage(QuickPayMessages.INSUFFICIENT_FUND);
 
         moneyTransactionService.withdraw(moneyWithdrawRequest);
     }
