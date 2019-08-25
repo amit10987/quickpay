@@ -4,6 +4,7 @@ import minibank.quickpay.QuickPayDataSource;
 import minibank.quickpay.domain.Account;
 import minibank.quickpay.exception.AccountNotFoundException;
 import org.sql2o.Connection;
+import org.sql2o.Query;
 
 import java.util.List;
 
@@ -17,29 +18,49 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void save(Account account) {
-        try (Connection connection = QuickPayDataSource.getSql2o().open()) {
-            connection.createQuery(CREATE_ACCOUNT_SQL).bind(account).executeUpdate();
+        try (Connection connection = QuickPayDataSource.getSql2o().open();
+             Query query = connection.createQuery(CREATE_ACCOUNT_SQL)) {
+            query.bind(account).executeUpdate();
         }
     }
 
     @Override
     public List<Account> findAll() {
-        try (Connection connection = QuickPayDataSource.getSql2o().open()) {
-            return connection.createQuery(GET_ALL_ACCOUNTS_SQL).executeAndFetch(Account.class);
+        try (Connection connection = QuickPayDataSource.getSql2o().open();
+             Query query = connection.createQuery(GET_ALL_ACCOUNTS_SQL)) {
+            return query.executeAndFetch(Account.class);
         }
     }
 
     @Override
     public Account findByAccountNumber(Long accountNumber, Connection connection) {
-        Account account = connection.createQuery(GET_ACCOUNT_BY_ACCOUNT_NUMBER_SQL).addParameter("accountNumber", accountNumber).executeAndFetchFirst(Account.class);
-        if (null == account) {
-            throw new AccountNotFoundException();
+        try (Query query = connection.createQuery(GET_ACCOUNT_BY_ACCOUNT_NUMBER_SQL)) {
+            Account account = query.addParameter("accountNumber", accountNumber).executeAndFetchFirst(Account.class);
+            if (null == account) {
+                throw new AccountNotFoundException();
+            }
+            return account;
         }
-        return account;
     }
 
     @Override
     public void update(Account account, Connection connection) {
-        connection.createQuery(UPDATE_ACCOUNT_SET_BALANCE_SQL).bind(account).executeUpdate();
+        try (Query query = connection.createQuery(UPDATE_ACCOUNT_SET_BALANCE_SQL)) {
+            query.bind(account).executeUpdate();
+        }
+    }
+
+    @Override
+    public Account findByAccountNumber(Long accountNumber) {
+        Account account;
+        try (Connection connection = QuickPayDataSource.getSql2o().open();
+             Query query = connection.createQuery(GET_ACCOUNT_BY_ACCOUNT_NUMBER_SQL)) {
+            account = query.addParameter("accountNumber", accountNumber).executeAndFetchFirst(Account.class);
+        }
+
+        if (null == account) {
+            throw new AccountNotFoundException();
+        }
+        return account;
     }
 }

@@ -5,6 +5,7 @@ import minibank.quickpay.domain.service.AccountService;
 import minibank.quickpay.dto.CreateAccountRequest;
 import minibank.quickpay.dto.CreateAccountResponse;
 import minibank.quickpay.util.JsonUtil;
+import minibank.quickpay.util.QuickPayEndPoint;
 import spark.Request;
 import spark.Response;
 
@@ -15,6 +16,8 @@ import static spark.Spark.post;
 
 public class AccountHandler {
 
+    private static final String APPLICATION_JSON = "application/json";
+    
     private AccountService accountService;
 
     public AccountHandler(AccountService accountService) {
@@ -22,7 +25,7 @@ public class AccountHandler {
     }
 
     public String createAccount(Request req, Response res) {
-        res.type("application/json");
+        res.type(APPLICATION_JSON);
         CreateAccountRequest createAccountRequest = JsonUtil.deserialize(req.body(), CreateAccountRequest.class);
         Long accountNumber = accountService.createAccount(createAccountRequest);
         res.status(201);
@@ -30,14 +33,22 @@ public class AccountHandler {
     }
 
     public String getAllAccounts(Request req, Response res) {
-        res.type("application/json");
+        res.type(APPLICATION_JSON);
         List<Account> accounts = accountService.getAllAccounts();
         res.status(200);
         return JsonUtil.serialize(accounts);
     }
 
+    public String getAccount(Request req, Response res) {
+        res.type(APPLICATION_JSON);
+        Account account = accountService.getAccount(Long.valueOf(req.params(":accountNumber")));
+        res.status(200);
+        return JsonUtil.serialize(account);
+    }
+
     public void setupEndpoints() {
-        post("/accounts", this::createAccount);
-        get("/accounts", this::getAllAccounts);
+        post(QuickPayEndPoint.Account.CREATE_ACCOUNT, this::createAccount);
+        get(QuickPayEndPoint.Account.GET_ALL_ACCOUNTS, this::getAllAccounts);
+        get(QuickPayEndPoint.Account.GET_ACCOUNT_BY_ACCOUNT_NUMBER, this::getAccount);
     }
 }

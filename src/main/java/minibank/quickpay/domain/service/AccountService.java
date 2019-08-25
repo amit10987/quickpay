@@ -9,4 +9,6 @@ public interface AccountService {
     Long createAccount(CreateAccountRequest req);
 
     List<Account> getAllAccounts();
+
+    Account getAccount(Long accountNumber);
 }

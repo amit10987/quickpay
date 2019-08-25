@@ -48,17 +48,21 @@ public final class Account {
         if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_CREDIT_AMOUNT);
         }
-        this.balance = this.balance.add(amount);
+        synchronized (this) {
+            this.balance = this.balance.add(amount);
+        }
     }
 
     public void debit(BigDecimal amount) {
         if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(ErrorMessages.INVALID_DEBIT_AMOUNT);
         }
-        BigDecimal newBalance = this.balance.subtract(amount);
-        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InsufficientFund();
+        synchronized (this) {
+            BigDecimal newBalance = this.balance.subtract(amount);
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+                throw new InsufficientFund();
+            }
+            this.balance = newBalance;
         }
-        this.balance = newBalance;
     }
 }

@@ -27,6 +27,11 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll();
     }
 
+    @Override
+    public Account getAccount(Long accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
+    }
+
     private Long generateAccountNumber() {
         return System.currentTimeMillis() % 10000000000L;
     }

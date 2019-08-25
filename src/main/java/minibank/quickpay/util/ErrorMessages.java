@@ -1,6 +1,6 @@
 package minibank.quickpay.util;
 
-public class ErrorMessages {
+public final class ErrorMessages {
     private ErrorMessages(){}
 
     public static final String INSUFFICIENT_FUND = "Insufficient Fund";

@@ -16,6 +16,10 @@ import static spark.Spark.*;
 public class App {
 
     public static void main(String[] args) {
+        init();
+    }
+
+    public static void init() {
         DbUtil.initialize();
 
         AccountRepository repository = new AccountRepositoryImpl();

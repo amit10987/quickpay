@@ -13,5 +13,7 @@ public interface AccountRepository {
 
     Account findByAccountNumber(Long accountNumber, Connection connection);
 
+    Account findByAccountNumber(Long accountNumber);
+
     void update(Account account, Connection connection);
 }

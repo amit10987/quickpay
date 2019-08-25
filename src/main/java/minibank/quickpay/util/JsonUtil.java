@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 /**
  * JSON Utility to perform operation like serialization and deserialization of object
  */
-public class JsonUtil {
+public final class JsonUtil {
 
     private JsonUtil() {
 
