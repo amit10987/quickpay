@@ -13,19 +13,32 @@ import minibank.quickpay.handler.QuickPayExceptionHandler;
 
 import static spark.Spark.*;
 
+/**
+ * this is main class for quickpay app
+ */
 public class App {
 
     public static void main(String[] args) {
         init();
     }
 
+
+    /**
+     * This method will initialize Schema for application.
+     * Then it will wire the dependency together
+     *
+     */
     public static void init() {
+
+        //Initialize and populate schema
         DbUtil.initialize();
 
+        //wire dependency for service repository and handler
         AccountRepository repository = new AccountRepositoryImpl();
         setupAccountHandler(repository);
         setupMoneyTransactionHandler(repository);
 
+        //setup general error messages
         notFound(QuickPayExceptionHandler::notFound);
         internalServerError(QuickPayExceptionHandler::internalServerError);
         exception(IllegalArgumentException.class, QuickPayExceptionHandler::process);

@@ -7,6 +7,9 @@ import org.sql2o.Sql2o;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Create Hikari data source.
+ */
 public final class QuickPayDataSource {
 
     private static final HikariConfig config = new HikariConfig();
@@ -23,10 +26,6 @@ public final class QuickPayDataSource {
         config.setMaximumPoolSize(20);
         dataSource = new HikariDataSource(config);
         sql2o = new Sql2o(dataSource);
-    }
-
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
     }
 
     public static Sql2o getSql2o() {
