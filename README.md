@@ -20,7 +20,7 @@ Spark-test : for integration test cases
 </hr>
 <h4> How to run the application</h4>
 <pre>
-mvn exec:java
+mvn clean install exec:java
 </pre>
 </hr>
 <h4> How to run test cases </h4>
@@ -49,7 +49,7 @@ mvn clean test
 <pre>
 <b>Create an account:</b>
 
-<b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : "200"}'</i></b>
+<b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : 200}'</i></b>
 
 <b>Response:</b> {"accountNumber":6893508747}
 </pre>
@@ -105,4 +105,37 @@ Response: {<b>"balance":500.00</b>,"userName":"Amit","accountNumber":6642159765}
 <b>check account detail after withdraw the money</b>
 curl http://localhost:4567/accounts/6642159765
 Response: {<b>"balance":200.00</b>,"userName":"Amit","accountNumber":6642159765}
+</pre>
+
+<h4>Basic validations </h4>
+<pre>opening balance can not be negative 
+
+<b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : -200}'</i></b>
+
+<b>Response:</b> {"message":"Opening balance is mandatory and must not be negative"}
+
+</pre>
+<pre>
+if transfer amount is greater than account balance 
+
+<b><i>curl -X POST http://localhost:4567/transaction/transfer -d '{"fromAccountNumber":6642159765, "toAccountNumber":6642159766, "transferAmount": 1000}'</i></b>
+
+<b>Response:</b> {"message":"Insufficient Fund"}
+
+</pre>
+<pre>
+deposit amount is negative 
+
+<b><i>curl -X POST http://localhost:4567/transaction/deposit -d '{"accountNumber":6642159765, "amount": -250}'</i></b>
+
+<b>Response:</b> {"message":"Not a valid amount to credit"}
+
+</pre>
+<pre>
+withdraw amount is more than account balance 
+
+<b><i>curl -X POST http://localhost:4567/transaction/withdraw -d '{"accountNumber":6642159765, "amount": 1000}'</i></b>
+
+<b>Response:</b> {"message":"Insufficient Fund"}
+
 </pre>
