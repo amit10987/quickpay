@@ -58,7 +58,7 @@ public class AccountHandler {
         Account account = accountService.getAccount(Long.valueOf(req.params(":accountNumber")));
         res.status(200);
         String accountRes = JsonUtil.serialize(account);
-        logger.info("List of accounts: {}", accountRes);
+        logger.info("Account by account number: {}", accountRes);
         return JsonUtil.serialize(account);
     }
 
