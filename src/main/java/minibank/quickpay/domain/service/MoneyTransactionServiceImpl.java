@@ -16,8 +16,14 @@ public class MoneyTransactionServiceImpl implements MoneyTransactionService {
         this.accountRepository = accountRepository;
     }
 
+    /**
+     * logic inside this method runs in TRANSACTION_READ_COMMITTED isolation level
+     *
+     * @param moneyTransferRequest
+     */
     @Override
     public void transfer(MoneyTransferRequest moneyTransferRequest) {
+        //by default Sql2o begin transaction with READ_COMMITTED isolation level
         try (Connection con = QuickPayDataSource.getSql2o().beginTransaction()) {
             Account fromAccount = accountRepository.findByAccountNumber(moneyTransferRequest.getFromAccountNumber(), con);
             Account toAccount = accountRepository.findByAccountNumber(moneyTransferRequest.getToAccountNumber(), con);

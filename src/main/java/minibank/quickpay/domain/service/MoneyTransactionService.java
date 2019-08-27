@@ -10,6 +10,7 @@ import minibank.quickpay.dto.MoneyWithdrawRequest;
 public interface MoneyTransactionService {
     /**
      * Transfer amount from one account to another
+     * this method should run inside isolation level READ_COMMITTED
      *
      * @param moneyTransferRequest
      */
@@ -17,6 +18,7 @@ public interface MoneyTransactionService {
 
     /**
      * Deposit money
+     * this method should run inside isolation level READ_COMMITTED
      *
      * @param moneyDepositRequest
      */
@@ -24,6 +26,7 @@ public interface MoneyTransactionService {
 
     /**
      * Withdraw money
+     * this method should run inside isolation level READ_COMMITTED
      *
      * @param moneyWithdrawRequest
      */

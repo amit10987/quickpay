@@ -5,6 +5,12 @@ import minibank.quickpay.util.QuickPayMessages;
 
 import java.math.BigDecimal;
 
+/**
+ * Account class expose most basic feature related to account like credit and debit
+ *
+ * This class is thread safe
+ *
+ */
 public final class Account {
 
     private BigDecimal balance;
@@ -16,6 +22,28 @@ public final class Account {
         this.balance = balance;
         this.userName = userName;
         this.accountNumber = accountNumber;
+    }
+
+    public void credit(BigDecimal amount) {
+        if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_CREDIT_AMOUNT);
+        }
+        synchronized (this) {
+            this.balance = this.balance.add(amount);
+        }
+    }
+
+    public void debit(BigDecimal amount) {
+        if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException(QuickPayMessages.INVALID_DEBIT_AMOUNT);
+        }
+        synchronized (this) {
+            BigDecimal newBalance = this.balance.subtract(amount);
+            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+                throw new InsufficientFund();
+            }
+            this.balance = newBalance;
+        }
     }
 
     private void validateMandatoryFields(BigDecimal balance, String userName, Long accountNumber) {
@@ -44,25 +72,4 @@ public final class Account {
         return accountNumber;
     }
 
-    public void credit(BigDecimal amount) {
-        if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(QuickPayMessages.INVALID_CREDIT_AMOUNT);
-        }
-        synchronized (this) {
-            this.balance = this.balance.add(amount);
-        }
-    }
-
-    public void debit(BigDecimal amount) {
-        if (null == amount || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(QuickPayMessages.INVALID_DEBIT_AMOUNT);
-        }
-        synchronized (this) {
-            BigDecimal newBalance = this.balance.subtract(amount);
-            if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
-                throw new InsufficientFund();
-            }
-            this.balance = newBalance;
-        }
-    }
 }
