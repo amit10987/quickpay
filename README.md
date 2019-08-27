@@ -42,42 +42,67 @@ mvn clean test
 
 <pre><b>Get all the accounts: </b>
 
-curl  http://localhost:4567/accounts
+<b><i>curl  http://localhost:4567/accounts</i></b>
 
 <b>Response:</b> [{"balance":500.00,"userName":"Amit","accountNumber":6642159765},{"balance":500.00,"userName":"Anil","accountNumber":6642159766}]
 </pre>
 <pre>
 <b>Create an account:</b>
 
-curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : "200"}'
+<b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : "200"}'</i></b>
 
 <b>Response:</b> {"accountNumber":6893508747}
 </pre>
 <pre>
 <b>Get account by account number: </b>
 
-curl  http://localhost:4567/accounts/6893508747 
+<b><i>curl  http://localhost:4567/accounts/6893508747 </i></b>
 
 <b>Response:</b> {"balance":200.00,"userName":"John","accountNumber":6893508747}
 </pre>
 <pre>
 <b>Money Transfer: </b>
 
-<b><i>check account details before transfer the money</i></b>
+<b>check account details before transfer the money</b>
 curl http://localhost:4567/accounts
 Response: [{<b>"balance":500.00</b>,"userName":"Amit","accountNumber":6642159765},{<b>"balance":500.00</b>,"userName":"Anil","accountNumber":6642159766}]
 
-curl -X POST http://localhost:4567/transaction/transfer -d '{"fromAccountNumber":6642159765, "toAccountNumber":6642159766, "transferAmount": 250}'
+<b><i>curl -X POST http://localhost:4567/transaction/transfer -d '{"fromAccountNumber":6642159765, "toAccountNumber":6642159766, "transferAmount": 250}'</i></b>
 
 <b>Response:</b> {"message":"Money successfully transferred"}
 
-<b><i>check account details after transfer the money</i></b>
+<b>check account details after transfer the money</b>
 curl http://localhost:4567/accounts
 Response: [{<b>"balance":250.00</b>,"userName":"Amit","accountNumber":6642159765},{<b>"balance":750.00</b>,"userName":"Anil","accountNumber":6642159766}]
 </pre>
 <pre>
 <b>Money Deposit: </b>
 
-<b><i>check account detail before deposit the money</i></b>
+<b>check account detail before deposit the money</b>
 curl http://localhost:4567/accounts/6642159765
+Response: {<b>"balance":250.00</b>,"userName":"Amit","accountNumber":6642159765}
 
+<b><i>curl -X POST http://localhost:4567/transaction/deposit -d '{"accountNumber":6642159765, "amount": 250}'</i></b>
+ 
+<b>Response:</b> {"message":"Money successfully deposited"}
+ 
+<b>check account detail after deposit the money</b>
+curl http://localhost:4567/accounts/6642159765
+Response: {<b>"balance":500.00 </b>,"userName":"Amit","accountNumber":6642159765}
+</pre>
+
+<pre>
+<b>Money Withdraw: </b>
+
+<b>check account detail before withdraw the money</b>
+curl http://localhost:4567/accounts/6642159765
+Response: {<b>"balance":500.00</b>,"userName":"Amit","accountNumber":6642159765}
+
+<b><i>curl -X POST http://localhost:4567/transaction/withdraw -d '{"accountNumber":6642159765, "amount": 300}'</i></b>
+ 
+<b>Response:</b> {"message":"Money successfully withdraw"}
+ 
+<b>check account detail after withdraw the money</b>
+curl http://localhost:4567/accounts/6642159765
+Response: {<b>"balance":200.00</b>,"userName":"Amit","accountNumber":6642159765}
+</pre>
