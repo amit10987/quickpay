@@ -56,9 +56,9 @@ mvn clean test
 <pre>
 <b>3. Get account by account number: </b>
 
-<b><i>curl  http://localhost:4567/accounts/6893508747 </i></b>
+<b><i>curl  http://localhost:4567/accounts/6642159765 </i></b>
 
-<b>Response:</b> {"balance":200.00,"userName":"John","accountNumber":6893508747}
+<b>Response:</b> {"balance":500.00,"userName":"Amit","accountNumber":6642159765}
 </pre>
 <pre>
 <b>4. Money Transfer: </b>
