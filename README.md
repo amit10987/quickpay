@@ -31,11 +31,11 @@ mvn clean test
 <h4> Rest service end points </h4>
 
 <h5><pre>1. GET /accounts                      <i>   # get all accounts </i>
-2. POST /accounts                     <i>   # get all accounts </i>
-3. GET /accounts/:accountNumber       <i>   # get all accounts </i>
-4. POST /transaction/transfer         <i>   # get all accounts </i>
-5. POST /transaction/deposit          <i>   # get all accounts </i>
-6. POST /transaction/withdraw         <i>   # get all accounts </i></pre></h5>
+2. POST /accounts                     <i>   # create an account </i>
+3. GET /accounts/:accountNumber       <i>   # get account by account number </i>
+4. POST /transaction/transfer         <i>   # transfer money from one account to another </i>
+5. POST /transaction/deposit          <i>   # deposit money </i>
+6. POST /transaction/withdraw         <i>   # withdraw money </i></pre></h5>
 
 <h4> Sample Request and Response </h4>
 <pre> By defaults application runs on port 4567 and it creates two default accounts to play with </pre>
@@ -63,6 +63,21 @@ curl  http://localhost:4567/accounts/6893508747
 <pre>
 <b>Money Transfer: </b>
 
+<b><i>check account details before transfer the money</i></b>
+curl http://localhost:4567/accounts
+Response: [{<b>"balance":500.00</b>,"userName":"Amit","accountNumber":6642159765},{<b>"balance":500.00</b>,"userName":"Anil","accountNumber":6642159766}]
 
+curl -X POST http://localhost:4567/transaction/transfer -d '{"fromAccountNumber":6642159765, "toAccountNumber":6642159766, "transferAmount": 250}'
+
+<b>Response:</b> {"message":"Money successfully transferred"}
+
+<b><i>check account details after transfer the money</i></b>
+curl http://localhost:4567/accounts
+Response: [{<b>"balance":250.00</b>,"userName":"Amit","accountNumber":6642159765},{<b>"balance":750.00</b>,"userName":"Anil","accountNumber":6642159766}]
 </pre>
+<pre>
+<b>Money Deposit: </b>
+
+<b><i>check account detail before deposit the money</i></b>
+curl http://localhost:4567/accounts/6642159765
 
