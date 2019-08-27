@@ -45,25 +45,22 @@ mvn clean test
 curl  http://localhost:4567/accounts
 
 <b>Response:</b> [{"balance":500.00,"userName":"Amit","accountNumber":6642159765},{"balance":500.00,"userName":"Anil","accountNumber":6642159766}]
-
--------------------------------------------------------------
-
+</pre>
+<pre>
 <b>Create an account:</b>
 
 curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : "200"}'
 
 <b>Response:</b> {"accountNumber":6893508747}
-
--------------------------------------------------------------
-
+</pre>
+<pre>
 <b>Get account by account number: </b>
 
 curl  http://localhost:4567/accounts/6893508747 
 
 <b>Response:</b> {"balance":200.00,"userName":"John","accountNumber":6893508747}
-
--------------------------------------------------------------
-
+</pre>
+<pre>
 <b>Money Transfer: </b>
 
 
