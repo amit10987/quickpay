@@ -113,7 +113,6 @@ Response: {<b>"balance":200.00</b>,"userName":"Amit","accountNumber":6642159765}
 <b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : -200}'</i></b>
 
 <b>Response:</b> {"message":"Opening balance is mandatory and must not be negative"}
-
 </pre>
 <pre>
 if transfer amount is greater than account balance 
@@ -129,7 +128,6 @@ deposit amount is negative
 <b><i>curl -X POST http://localhost:4567/transaction/deposit -d '{"accountNumber":6642159765, "amount": -250}'</i></b>
 
 <b>Response:</b> {"message":"Not a valid amount to credit"}
-
 </pre>
 <pre>
 withdraw amount is more than account balance 
@@ -137,5 +135,4 @@ withdraw amount is more than account balance
 <b><i>curl -X POST http://localhost:4567/transaction/withdraw -d '{"accountNumber":6642159765, "amount": 1000}'</i></b>
 
 <b>Response:</b> {"message":"Insufficient Fund"}
-
 </pre>
