@@ -38,7 +38,7 @@ mvn clean test
 6. POST /transaction/withdraw         <i>   # withdraw money </i></pre></h5>
 
 <h4> Sample Request and Response </h4>
-<pre> By defaults application runs on port 4567 and it creates two default accounts to play with </pre>
+<pre>By defaults application runs on port 4567 and it creates two default accounts to play with </pre>
 
 <pre><b>1. Get all the accounts: </b>
 
@@ -138,4 +138,10 @@ withdraw amount is more than account balance
 
 <b>Response:</b> {"message":"Insufficient Fund"}
 
+</pre>
+<pre>
+<h4>Note </h4>
+Core domain logic is written inside Account.java class. This class is thread safe. 
+For the sake of simplicity i have kept common validation like Insufficient fund inside the debit method.
+This logic can be move to different method preDebit check inside some other OverdraftPolicy class. 
 </pre>
