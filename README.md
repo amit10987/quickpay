@@ -40,28 +40,28 @@ mvn clean test
 <h4> Sample Request and Response </h4>
 <pre> By defaults application runs on port 4567 and it creates two default accounts to play with </pre>
 
-<pre><b>Get all the accounts: </b>
+<pre><b>1. Get all the accounts: </b>
 
 <b><i>curl  http://localhost:4567/accounts</i></b>
 
 <b>Response:</b> [{"balance":500.00,"userName":"Amit","accountNumber":6642159765},{"balance":500.00,"userName":"Anil","accountNumber":6642159766}]
 </pre>
 <pre>
-<b>Create an account:</b>
+<b>2. Create an account:</b>
 
 <b><i>curl -X POST http://localhost:4567/accounts -d '{"userName" : "John", "openingBalance" : 200}'</i></b>
 
 <b>Response:</b> {"accountNumber":6893508747}
 </pre>
 <pre>
-<b>Get account by account number: </b>
+<b>3. Get account by account number: </b>
 
 <b><i>curl  http://localhost:4567/accounts/6893508747 </i></b>
 
 <b>Response:</b> {"balance":200.00,"userName":"John","accountNumber":6893508747}
 </pre>
 <pre>
-<b>Money Transfer: </b>
+<b>4. Money Transfer: </b>
 
 <b>check account details before transfer the money</b>
 curl http://localhost:4567/accounts
@@ -76,7 +76,7 @@ curl http://localhost:4567/accounts
 Response: [{<b>"balance":250.00</b>,"userName":"Amit","accountNumber":6642159765},{<b>"balance":750.00</b>,"userName":"Anil","accountNumber":6642159766}]
 </pre>
 <pre>
-<b>Money Deposit: </b>
+<b>5. Money Deposit: </b>
 
 <b>check account detail before deposit the money</b>
 curl http://localhost:4567/accounts/6642159765
@@ -92,7 +92,7 @@ Response: {<b>"balance":500.00 </b>,"userName":"Amit","accountNumber":6642159765
 </pre>
 
 <pre>
-<b>Money Withdraw: </b>
+<b>6. Money Withdraw: </b>
 
 <b>check account detail before withdraw the money</b>
 curl http://localhost:4567/accounts/6642159765
