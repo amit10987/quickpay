@@ -139,8 +139,3 @@ withdraw amount is more than account balance
 <b>Response:</b> {"message":"Insufficient Fund"}
 
 </pre>
-<h4>Note</h4><pre>
-Core domain logic is written inside Account.java class. This class is thread safe. 
-For the sake of simplicity i have kept common validation like Insufficient fund inside the debit method.
-This logic can be move to different method preDebit check inside some other OverdraftPolicy class. 
-</pre>
