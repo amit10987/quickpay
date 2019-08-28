@@ -132,3 +132,12 @@ Response: {<b>"balance":200.00</b>,"userName":"Amit","accountNumber":6642159765}
 
 <b>Response:</b> {"message":"Insufficient Fund"}
 </pre>
+
+<h4>Note </h4>
+<pre>
+No framework is used in the application only some library.
+Core domain logic is inside Account.java class and this class is thread safe.
+
+Business logic like transfer/deposit/withdraw is running inside the transaction isolation level READ_COMMITTED.
+Isolation level is not mention when beginning the transaction as by default Sql2o opens transaction in READ_COMMITTED isolation level.
+</pre>
