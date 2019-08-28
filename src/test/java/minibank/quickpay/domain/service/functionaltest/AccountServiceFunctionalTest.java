@@ -1,6 +1,6 @@
 package minibank.quickpay.domain.service.functionaltest;
 
-import minibank.quickpay.domain.service.AccountServiceImpl;
+import minibank.quickpay.service.AccountServiceImpl;
 import minibank.quickpay.dto.CreateAccountRequest;
 import minibank.quickpay.infrastructure.AccountRepositoryImpl;
 import minibank.quickpay.util.QuickPayMessages;

@@ -1,7 +1,7 @@
 package minibank.quickpay.handler;
 
 import minibank.quickpay.domain.Account;
-import minibank.quickpay.domain.service.AccountService;
+import minibank.quickpay.service.AccountService;
 import minibank.quickpay.dto.CreateAccountRequest;
 import minibank.quickpay.dto.CreateAccountResponse;
 import minibank.quickpay.util.JsonUtil;
