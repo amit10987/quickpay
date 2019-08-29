@@ -1,6 +1,6 @@
 package minibank.quickpay.handler;
 
-import minibank.quickpay.domain.service.MoneyTransactionService;
+import minibank.quickpay.service.MoneyTransactionService;
 import minibank.quickpay.dto.*;
 import minibank.quickpay.exception.AccountNotFoundException;
 import minibank.quickpay.exception.InsufficientFund;

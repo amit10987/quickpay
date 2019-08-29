@@ -1,7 +1,7 @@
 package minibank.quickpay.domain.service.functionaltest;
 
 import minibank.quickpay.domain.Account;
-import minibank.quickpay.domain.service.MoneyTransactionServiceImpl;
+import minibank.quickpay.service.MoneyTransactionServiceImpl;
 import minibank.quickpay.dto.MoneyDepositRequest;
 import minibank.quickpay.dto.MoneyTransferRequest;
 import minibank.quickpay.dto.MoneyWithdrawRequest;

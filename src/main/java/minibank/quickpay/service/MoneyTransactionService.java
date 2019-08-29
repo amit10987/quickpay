@@ -1,4 +1,4 @@
-package minibank.quickpay.domain.service;
+package minibank.quickpay.service;
 
 import minibank.quickpay.dto.MoneyDepositRequest;
 import minibank.quickpay.dto.MoneyTransferRequest;

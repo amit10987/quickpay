@@ -2,8 +2,8 @@ package minibank.quickpay;
 
 import minibank.quickpay.service.AccountService;
 import minibank.quickpay.service.AccountServiceImpl;
-import minibank.quickpay.domain.service.MoneyTransactionService;
-import minibank.quickpay.domain.service.MoneyTransactionServiceImpl;
+import minibank.quickpay.service.MoneyTransactionService;
+import minibank.quickpay.service.MoneyTransactionServiceImpl;
 import minibank.quickpay.handler.AccountHandler;
 import minibank.quickpay.handler.MoneyTransactionHandler;
 import minibank.quickpay.infrastructure.AccountRepository;
